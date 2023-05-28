@@ -1,0 +1,22 @@
+scalar DateTime
+
+type Class {
+    uuid: ID!
+    name: String!
+    # teacher: User!
+    # students: [User!]!
+    # subjects: [Subject!]!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type Query {
+    classes: [Class!]!
+    class(id: ID!): Class
+}
+
+type Mutation {
+    createClass(name: String!): Class!
+    updateClass(id: ID!, name: String!): Class!
+    deleteClass(id: ID!): Class!
+}

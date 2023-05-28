@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  uuid     String @id @default(uuid())
+  name     String @db.VarChar(255)
+  email    String @unique @db.VarChar(255)
+  password String @db.VarChar(255)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Student   Student[]
+  Teacher   Teacher[]
+}
+
+model Student {
+  uuid String @id @default(uuid())
+
+  userUuid String
+  user     User   @relation(fields: [userUuid], references: [uuid])
+
+  grades Grade[]
+  Class  Class?  @relation(fields: [classUuid], references: [uuid])
+
+  classUuid String?
+}
+
+model Teacher {
+  uuid String @id @default(uuid())
+
+  userUuid String
+  user     User   @relation(fields: [userUuid], references: [uuid])
+
+  classes  Class[]
+  grades   Grade[]
+  subjects Subject[]
+}
+
+model Class {
+  uuid String @id @default(uuid())
+  name String @db.VarChar(255)
+
+  teacherUuid String?
+  teacher     Teacher? @relation(fields: [teacherUuid], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students Student[]
+  subjects Subject[]
+}
+
+model Subject {
+  uuid String @id @default(uuid())
+  name String @db.VarChar(255)
+
+  classUuid String
+  class     Class  @relation(fields: [classUuid], references: [uuid])
+
+  teacherUuid String?
+  teacher     Teacher? @relation(fields: [teacherUuid], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  grades Grade[]
+}
+
+model Grade {
+  uuid  String   @id @default(uuid())
+  value Float
+  date  DateTime @db.Date
+
+  studentUuid String
+  student     Student @relation(fields: [studentUuid], references: [uuid])
+
+  subjectUuid String
+  subject     Subject @relation(fields: [subjectUuid], references: [uuid])
+
+  teacherUuid String
+  teacher     Teacher @relation(fields: [teacherUuid], references: [uuid])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
