@@ -40,9 +40,22 @@ export abstract class IQuery {
 
     abstract class(uuid: string): Nullable<Class> | Promise<Nullable<Class>>;
 
-    abstract gradesForStudent(): Nullable<Grade>[] | Promise<Nullable<Grade>[]>;
+    abstract gradesForStudent(): Nullable<GradeReponse>[] | Promise<Nullable<GradeReponse>[]>;
 
     abstract userInfos(): Nullable<User> | Promise<Nullable<User>>;
+}
+
+export class GradeReponse {
+    module: string;
+    moyenne?: Nullable<number>;
+    subjects: Nullable<SubjectResponse>[];
+}
+
+export class SubjectResponse {
+    subject: string;
+    moyenne?: Nullable<number>;
+    teacher: string;
+    grades: Nullable<Grade>[];
 }
 
 export class User {
@@ -104,7 +117,7 @@ export class Subject {
 
 export class Grade {
     uuid: string;
-    value: Decimal;
+    value?: Nullable<Decimal>;
     coef: Decimal;
     studentUuid: string;
     student: Student;

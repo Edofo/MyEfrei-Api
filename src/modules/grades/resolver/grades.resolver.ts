@@ -1,19 +1,18 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 
-import { User } from '@prisma/client';
+import { User } from "@prisma/client";
 
-import { GradesService } from '../services/grades.service';
+import { GradesService } from "../services/grades.service";
 
-import { CurrentUser } from '@/decorators/user.decorator';
+import { CurrentUser } from "@/decorators/user.decorator";
 
-@Resolver('Grade')
+@Resolver("Grade")
 export class GradesResolver {
     constructor(private readonly gradesService: GradesService) {}
 
-    @Query('gradesForStudent')
+    @Query("gradesForStudent")
     async findAllByStudentUuid(@CurrentUser() user: User) {
         const grades = await this.gradesService.findAllByStudentUuid(user.uuid);
-        console.log(grades);
         return grades || [];
     }
 }

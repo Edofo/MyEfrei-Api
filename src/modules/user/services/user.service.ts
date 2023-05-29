@@ -15,6 +15,10 @@ export class UserService {
             where: {
                 uuid,
             },
+            include: {
+                Student: true,
+                Teacher: true,
+            },
         });
     }
 

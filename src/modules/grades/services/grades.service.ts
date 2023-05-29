@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
-
-import { PrismaService } from '@/modules/database/services/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "@/modules/database/services/prisma.service";
 
 @Injectable()
 export class GradesService {
@@ -8,29 +7,36 @@ export class GradesService {
 
     async findAllByStudentUuid(studentUuid: string) {
         try {
-            const grades = await this.prisma.grade.findMany({
+            const modules: any = await this.prisma.module.findMany({
                 where: {
-                    studentUuid,
+                    subjects: {
+                        some: {
+                            grades: {
+                                some: {
+                                    studentUuid,
+                                },
+                            },
+                        },
+                    },
                 },
                 select: {
-                    uuid: true,
-                    value: true,
-                    coef: true,
-                    teacher: {
-                        select: {
-                            user: {
-                                select: {
-                                    name: true,
-                                },
-                            },
-                        },
-                    },
-                    subject: {
+                    name: true,
+                    subjects: {
                         select: {
                             name: true,
-                            module: {
+                            teacher: {
                                 select: {
-                                    name: true,
+                                    user: {
+                                        select: {
+                                            name: true,
+                                        },
+                                    },
+                                },
+                            },
+                            grades: {
+                                select: {
+                                    value: true,
+                                    coef: true,
                                 },
                             },
                         },
@@ -38,22 +44,47 @@ export class GradesService {
                 },
             });
 
-            // sort grades by subject name and module name
-            const tab = [];
+            const tab: any = [];
 
-            grades.forEach(grade => {
-                if (!tab[grade.subject.name]) {
-                    tab[grade.subject.name] = {};
-                }
+            modules.forEach((module: { subjects: any[]; name: any }) => {
+                let moduleMoyenne = 0;
 
-                if (!tab[grade.subject.name][grade.subject.module.name]) {
-                    tab[grade.subject.name][grade.subject.module.name] = [];
-                }
+                module.subjects.forEach(subject => {
+                    let moyenne = 0;
 
-                tab[grade.subject.name][grade.subject.module.name].push(grade);
+                    let numberOfGrades = 0;
+                    subject.grades.forEach(grade => {
+                        numberOfGrades += 1 * Number(grade.coef);
+                        moyenne += Number(grade.value) * Number(grade.coef);
+                    });
+
+                    moyenne /= numberOfGrades;
+
+                    subject.moyenne = moyenne;
+                    moduleMoyenne += moyenne;
+                });
+
+                moduleMoyenne /= module.subjects.length;
+
+                tab.push({
+                    module: module.name,
+                    moyenne: moduleMoyenne,
+                    subjects: module.subjects.map(subject => {
+                        let numberOfGrades = 0;
+                        const moyenne = subject.grades.reduce((acc: number, grade: { coef: any; value: any }) => {
+                            numberOfGrades += 1 * Number(grade.coef);
+                            return acc + Number(grade.value) * Number(grade.coef);
+                        }, 0);
+
+                        return {
+                            subject: subject.name,
+                            teacher: subject.teacher.user.name,
+                            moyenne: moyenne / numberOfGrades,
+                            grades: subject.grades,
+                        };
+                    }),
+                });
             });
-
-            console.log(tab);
 
             return tab;
         } catch (error) {

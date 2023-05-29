@@ -75,8 +75,8 @@ model Subject {
   teacherUuid String?
   teacher     Teacher? @relation(fields: [teacherUuid], references: [uuid])
 
-  moduleUuid String?
-  module     Module? @relation(fields: [moduleUuid], references: [uuid])
+  moduleUuid String
+  module     Module @relation(fields: [moduleUuid], references: [uuid])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

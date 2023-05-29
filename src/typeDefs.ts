@@ -66,7 +66,7 @@ type Subject {
 
 type Grade {
     uuid: String!
-    value: Decimal!
+    value: Decimal
     coef: Decimal!
     studentUuid: String!
     student: Student!
