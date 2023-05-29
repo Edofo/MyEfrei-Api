@@ -1,24 +1,3 @@
-type Grade {
-    # Example field (placeholder)
-    id: Int
-}
-
-input CreateGradeInput {
-    # Example field (placeholder)
-    exampleField: Int
-}
-
-input UpdateGradeInput {
-    id: Int!
-}
-
 type Query {
-    grades: [Grade]!
-    grade(id: Int!): Grade
-}
-
-type Mutation {
-    createGrade(createGradeInput: CreateGradeInput!): Grade!
-    updateGrade(updateGradeInput: UpdateGradeInput!): Grade!
-    removeGrade(id: Int!): Grade
+    gradesForStudent: [Grade]!
 }

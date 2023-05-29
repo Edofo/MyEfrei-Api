@@ -1,3 +1,4 @@
+import { UserRole } from '@/graphql';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserDto {
@@ -12,4 +13,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     @IsString()
     password: string;
+
+    role?: UserRole;
 }

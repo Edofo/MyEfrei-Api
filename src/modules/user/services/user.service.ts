@@ -3,6 +3,8 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/modules/database/services/prisma.service';
 
 import { CreateUserDto } from '../dto/create-user.dto';
+import { UserRole } from '@/graphql';
+import { Student, Teacher } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -24,16 +26,37 @@ export class UserService {
         });
     }
 
-    async createUser(data: CreateUserDto) {
+    async createUser(data: CreateUserDto): Promise<Student | Teacher> {
         // check if user already exists
-        const user = await this.findByEmail(data.email);
+        const checkUser = await this.findByEmail(data.email);
 
-        if (user) {
+        if (checkUser) {
             throw new ConflictException('User already exists');
         }
 
-        return await this.prisma.user.create({
+        const user = await this.prisma.user.create({
             data,
+        });
+
+        // create student or teacher
+        if (data?.role === UserRole.TEACHER) {
+            return await this.prisma.teacher.create({
+                data: {
+                    userUuid: user.uuid,
+                },
+                include: {
+                    user: true,
+                },
+            });
+        }
+
+        return await this.prisma.student.create({
+            data: {
+                userUuid: user.uuid,
+            },
+            include: {
+                user: true,
+            },
         });
     }
 }

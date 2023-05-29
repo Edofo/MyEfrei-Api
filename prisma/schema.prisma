@@ -40,7 +40,6 @@ model Teacher {
   userUuid String
   user     User   @relation(fields: [userUuid], references: [uuid])
 
-  classes  Class[]
   grades   Grade[]
   subjects Subject[]
 }
@@ -49,13 +48,20 @@ model Class {
   uuid String @id @default(uuid())
   name String @db.VarChar(255)
 
-  teacherUuid String?
-  teacher     Teacher? @relation(fields: [teacherUuid], references: [uuid])
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   students Student[]
+  subjects Subject[]
+}
+
+model Module {
+  uuid String @id @default(uuid())
+  name String @db.VarChar(255)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   subjects Subject[]
 }
 
@@ -69,6 +75,9 @@ model Subject {
   teacherUuid String?
   teacher     Teacher? @relation(fields: [teacherUuid], references: [uuid])
 
+  moduleUuid String?
+  module     Module? @relation(fields: [moduleUuid], references: [uuid])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -77,7 +86,8 @@ model Subject {
 
 model Grade {
   uuid  String   @id @default(uuid())
-  value Float
+  value Decimal? @db.Decimal(5, 2)
+  coef  Decimal? @db.Decimal(5, 2)
   date  DateTime @db.Date
 
   studentUuid String

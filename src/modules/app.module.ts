@@ -8,10 +8,11 @@ import { join } from 'path';
 import { DatabaseModule } from '@/modules/database/database.module';
 
 import { AuthModule } from '@/modules/auth/auth.module';
-import { StudentModule } from '@/modules/student/student.module';
 import { GradesModule } from '@/modules/grades/grades.module';
 import { UserModule } from '@/modules/user/user.module';
 import { ClassModule } from '@/modules/class/class.module';
+
+import typeDefs from '@/typeDefs';
 
 @Module({
     imports: [
@@ -19,7 +20,6 @@ import { ClassModule } from '@/modules/class/class.module';
 
         AuthModule,
         UserModule,
-        StudentModule,
         GradesModule,
         ClassModule,
 
@@ -30,9 +30,9 @@ import { ClassModule } from '@/modules/class/class.module';
                 path: join(process.cwd(), 'src/graphql.ts'),
                 outputAs: 'class',
             },
-
-            include: [AuthModule, StudentModule, GradesModule, UserModule, ClassModule],
+            typeDefs: [typeDefs],
         }),
     ],
+    providers: [],
 })
 export class AppModule {}

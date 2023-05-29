@@ -1,12 +1,11 @@
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { BadRequestException } from '@nestjs/common';
 
-import { User } from '@prisma/client';
+import { RegisterInput, Student, Teacher } from '@/graphql';
 
-import { RegisterInput } from '@/graphql';
+import { Public } from '@/decorators/public.decorator';
 
 import { AuthService } from '../services/auth.service';
-import { Public } from '@/decorators/public.decorator';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -14,7 +13,7 @@ export class AuthResolver {
 
     @Mutation('register')
     @Public()
-    async register(@Args('data') data: RegisterInput): Promise<User> {
+    async register(@Args('data') data: RegisterInput) {
         return await this.authService.register(data);
     }
 

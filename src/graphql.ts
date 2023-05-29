@@ -8,35 +8,21 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export enum UserRole {
+    STUDENT = "STUDENT",
+    TEACHER = "TEACHER"
+}
+
 export class RegisterInput {
     name: string;
     email: string;
+    userRole?: Nullable<UserRole>;
     password: string;
 }
 
-export class CreateGradeInput {
-    exampleField?: Nullable<number>;
-}
-
-export class UpdateGradeInput {
-    id: number;
-}
-
-export class CreateStudentInput {
-    id: number;
-}
-
-export class UpdateStudentInput {
-    id: number;
-}
-
-export class User {
+export class RegisterResponse {
     uuid: string;
-    name: string;
-    email: string;
-    password: string;
-    createdAt: DateTime;
-    updatedAt: DateTime;
+    user: User;
 }
 
 export class AccessToken {
@@ -44,27 +30,45 @@ export class AccessToken {
 }
 
 export abstract class IMutation {
-    abstract register(data: RegisterInput): User | Promise<User>;
+    abstract register(data: RegisterInput): RegisterResponse | Promise<RegisterResponse>;
 
     abstract login(email: string, password: string): AccessToken | Promise<AccessToken>;
+}
 
-    abstract createClass(name: string): Class | Promise<Class>;
+export abstract class IQuery {
+    abstract classes(): Class[] | Promise<Class[]>;
 
-    abstract updateClass(id: string, name: string): Class | Promise<Class>;
+    abstract class(uuid: string): Nullable<Class> | Promise<Nullable<Class>>;
 
-    abstract deleteClass(id: string): Class | Promise<Class>;
+    abstract gradesForStudent(): Nullable<Grade>[] | Promise<Nullable<Grade>[]>;
 
-    abstract createGrade(createGradeInput: CreateGradeInput): Grade | Promise<Grade>;
+    abstract userInfos(): Nullable<User> | Promise<Nullable<User>>;
+}
 
-    abstract updateGrade(updateGradeInput: UpdateGradeInput): Grade | Promise<Grade>;
+export class User {
+    uuid: string;
+    name: string;
+    email: string;
+    createdAt: DateTime;
+    updatedAt: DateTime;
+    student: Student[];
+    teacher: Teacher[];
+}
 
-    abstract removeGrade(id: number): Nullable<Grade> | Promise<Nullable<Grade>>;
+export class Student {
+    uuid: string;
+    userUuid: string;
+    user?: Nullable<User>;
+    grades?: Nullable<Grade[]>;
+    class?: Nullable<Class>;
+}
 
-    abstract createStudent(createStudentInput: CreateStudentInput): Student | Promise<Student>;
-
-    abstract updateStudent(updateStudentInput: UpdateStudentInput): Student | Promise<Student>;
-
-    abstract removeStudent(id: number): Nullable<Student> | Promise<Nullable<Student>>;
+export class Teacher {
+    uuid: string;
+    userUuid: string;
+    user: User;
+    grades?: Nullable<Grade[]>;
+    subjects?: Nullable<Subject[]>;
 }
 
 export class Class {
@@ -72,33 +76,46 @@ export class Class {
     name: string;
     createdAt: DateTime;
     updatedAt: DateTime;
+    students?: Nullable<Student[]>;
+    subjects?: Nullable<Subject[]>;
 }
 
-export abstract class IQuery {
-    abstract classes(): Class[] | Promise<Class[]>;
+export class Module {
+    uuid: string;
+    name: string;
+    createdAt: DateTime;
+    updatedAt: DateTime;
+    subjects?: Nullable<Subject[]>;
+}
 
-    abstract class(id: string): Nullable<Class> | Promise<Nullable<Class>>;
-
-    abstract grades(): Nullable<Grade>[] | Promise<Nullable<Grade>[]>;
-
-    abstract grade(id: number): Nullable<Grade> | Promise<Nullable<Grade>>;
-
-    abstract students(): Nullable<Student>[] | Promise<Nullable<Student>[]>;
-
-    abstract student(id: number): Nullable<Student> | Promise<Nullable<Student>>;
-
-    abstract user(uuid: string): Nullable<User> | Promise<Nullable<User>>;
+export class Subject {
+    uuid: string;
+    name: string;
+    classUuid: string;
+    class: Class;
+    teacherUuid?: Nullable<string>;
+    teacher?: Nullable<Teacher>;
+    moduleUuid?: Nullable<string>;
+    module?: Nullable<Module>;
+    createdAt: DateTime;
+    updatedAt: DateTime;
+    grades: Grade[];
 }
 
 export class Grade {
-    id?: Nullable<number>;
-}
-
-export class Student {
-    id?: Nullable<number>;
-    name?: Nullable<string>;
-    email?: Nullable<string>;
+    uuid: string;
+    value: Decimal;
+    coef: Decimal;
+    studentUuid: string;
+    student: Student;
+    teacherUuid: string;
+    teacher: Teacher;
+    subjectUuid: string;
+    subject: Subject;
+    createdAt: DateTime;
+    updatedAt: DateTime;
 }
 
 export type DateTime = any;
+export type Decimal = any;
 type Nullable<T> = T | null;

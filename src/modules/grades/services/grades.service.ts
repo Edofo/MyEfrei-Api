@@ -2,38 +2,62 @@ import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '@/modules/database/services/prisma.service';
 
-import { CreateGradeInput } from '../dto/create-grade.input';
-import { UpdateGradeInput } from '../dto/update-grade.input';
-
 @Injectable()
 export class GradesService {
     constructor(private readonly prisma: PrismaService) {}
 
-    create(createGradeInput: CreateGradeInput) {
-        return 'This action adds a new grade';
-    }
-
-    async findAll() {
+    async findAllByStudentUuid(studentUuid: string) {
         try {
-            const grades = await this.prisma.grade.findMany();
+            const grades = await this.prisma.grade.findMany({
+                where: {
+                    studentUuid,
+                },
+                select: {
+                    uuid: true,
+                    value: true,
+                    coef: true,
+                    teacher: {
+                        select: {
+                            user: {
+                                select: {
+                                    name: true,
+                                },
+                            },
+                        },
+                    },
+                    subject: {
+                        select: {
+                            name: true,
+                            module: {
+                                select: {
+                                    name: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            });
 
-            console.log('grades', grades);
+            // sort grades by subject name and module name
+            const tab = [];
 
-            return grades;
+            grades.forEach(grade => {
+                if (!tab[grade.subject.name]) {
+                    tab[grade.subject.name] = {};
+                }
+
+                if (!tab[grade.subject.name][grade.subject.module.name]) {
+                    tab[grade.subject.name][grade.subject.module.name] = [];
+                }
+
+                tab[grade.subject.name][grade.subject.module.name].push(grade);
+            });
+
+            console.log(tab);
+
+            return tab;
         } catch (error) {
             throw error;
         }
-    }
-
-    findOne(id: number) {
-        return `This action returns a #${id} grade`;
-    }
-
-    update(id: number, updateGradeInput: UpdateGradeInput) {
-        return `This action updates a #${id} grade`;
-    }
-
-    remove(id: number) {
-        return `This action removes a #${id} grade`;
     }
 }

@@ -3,13 +3,14 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { User } from '@prisma/client';
 
 import { UserService } from '../services/user.service';
+import { CurrentUser } from '@/decorators/user.decorator';
 
 @Resolver('User')
 export class UserResolver {
     constructor(private readonly userService: UserService) {}
 
-    @Query('user')
-    async getUser(@Args('id') id: string): Promise<User | null> {
-        return this.userService.findById(id);
+    @Query('userInfos')
+    async getUserInfo(@CurrentUser() user: User) {
+        return user;
     }
 }

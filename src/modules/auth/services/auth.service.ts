@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import * as bcrypt from 'bcrypt';
 
-import { User } from '@prisma/client';
+import { User, Student, Teacher } from '@prisma/client';
 
 import { UserService } from '@/modules/user/services/user.service';
 
@@ -15,9 +15,20 @@ export class AuthService {
 
     async validateUser(email: string, password: string): Promise<User | null> {
         const user = await this.userService.findByEmail(email);
+
         if (user && bcrypt.compareSync(password, user.password)) {
             return user;
         }
+        return null;
+    }
+
+    async validateUserPayload(payload: any): Promise<User | null> {
+        const user = await this.userService.findByEmail(payload.email);
+
+        if (user) {
+            return user;
+        }
+
         return null;
     }
 
@@ -35,7 +46,7 @@ export class AuthService {
         };
     }
 
-    async register(data: RegisterInput): Promise<User> {
+    async register(data: RegisterInput): Promise<Student | Teacher> {
         if (!data.password) {
             throw new Error('Password is required');
         }

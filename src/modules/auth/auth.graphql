@@ -1,13 +1,13 @@
-type User {
-    uuid: ID!
-    name: String!
-    email: String!
-}
-
 input RegisterInput {
     name: String!
     email: String!
+    userRole: UserRole
     password: String!
+}
+
+type RegisterResponse {
+    uuid: String!
+    user: User!
 }
 
 type AccessToken {
@@ -15,6 +15,6 @@ type AccessToken {
 }
 
 type Mutation {
-    register(data: RegisterInput!): User!
+    register(data: RegisterInput!): RegisterResponse!
     login(email: String!, password: String!): AccessToken!
 }
