@@ -16,10 +16,11 @@ model User {
   email    String @unique @db.VarChar(255)
   password String @db.VarChar(255)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Student   Student[]
-  Teacher   Teacher[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Student Student[]
+  Teacher Teacher[]
 }
 
 model Student {
@@ -28,10 +29,10 @@ model Student {
   userUuid String
   user     User   @relation(fields: [userUuid], references: [uuid])
 
-  grades Grade[]
-  Class  Class?  @relation(fields: [classUuid], references: [uuid])
-
   classUuid String?
+  class     Class?  @relation(fields: [classUuid], references: [uuid])
+
+  grades Grade[]
 }
 
 model Teacher {

@@ -1,4 +1,19 @@
+type ClassForStudentReponse {
+    name: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    students: [StudentsClass!]
+}
+
+type StudentsClass {
+    user: UserClass!
+}
+
+type UserClass {
+    name: String!
+    email: String
+}
+
 type Query {
-    classes: [Class!]!
-    class(uuid: ID!): Class
+    classForStudent: ClassForStudentReponse!
 }

@@ -35,10 +35,24 @@ export abstract class IMutation {
     abstract login(email: string, password: string): AccessToken | Promise<AccessToken>;
 }
 
-export abstract class IQuery {
-    abstract classes(): Class[] | Promise<Class[]>;
+export class ClassForStudentReponse {
+    name?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    updatedAt?: Nullable<DateTime>;
+    students?: Nullable<StudentsClass[]>;
+}
 
-    abstract class(uuid: string): Nullable<Class> | Promise<Nullable<Class>>;
+export class StudentsClass {
+    user: UserClass;
+}
+
+export class UserClass {
+    name: string;
+    email?: Nullable<string>;
+}
+
+export abstract class IQuery {
+    abstract classForStudent(): ClassForStudentReponse | Promise<ClassForStudentReponse>;
 
     abstract gradesForStudent(): Nullable<GradeReponse>[] | Promise<Nullable<GradeReponse>[]>;
 
