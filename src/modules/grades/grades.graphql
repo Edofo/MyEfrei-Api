@@ -1,4 +1,4 @@
-type GradeReponse {
+type GradeResponse {
     module: String!
     moyenne: Float
     subjects: [SubjectResponse]!
@@ -28,6 +28,12 @@ type GradeStudentInfos {
 }
 
 type Query {
-    gradesForStudent: [GradeReponse]!
+    gradesForStudent: [GradeResponse]!
     gradesForTeacher: [GradesForTeacher]!
+}
+
+type Mutation {
+    updateGrade(grade_uuid: String!, value: Float!): Grade!
+    deleteGrade(grade_uuid: String!): Grade!
+    createGrade(student_uuid: String!, subject_uuid: String!, value: Float!, coef: Float!): Grade!
 }

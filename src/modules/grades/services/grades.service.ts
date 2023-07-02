@@ -144,4 +144,129 @@ export class GradesService {
             throw error;
         }
     }
+
+    async update(gradeUuid: string, value: number, teacherUuid: string) {
+        try {
+            const grade = await this.prisma.grade.findUnique({
+                where: {
+                    uuid: gradeUuid,
+                },
+                include: {
+                    subject: {
+                        include: {
+                            teacher: {
+                                select: {
+                                    uuid: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+
+            if (grade.subject.teacher.uuid !== teacherUuid) throw new Error("You are not the teacher of this subject");
+
+            const updatedGrade = await this.prisma.grade.update({
+                where: {
+                    uuid: gradeUuid,
+                },
+                data: {
+                    value,
+                },
+            });
+
+            return updatedGrade;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async delete(gradeUuid: string, teacherUuid: string) {
+        try {
+            const grade = await this.prisma.grade.findUnique({
+                where: {
+                    uuid: gradeUuid,
+                },
+                include: {
+                    subject: {
+                        include: {
+                            teacher: {
+                                select: {
+                                    uuid: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+
+            if (grade.subject.teacher.uuid !== teacherUuid) throw new Error("You are not the teacher of this subject");
+
+            const deletedGrade = await this.prisma.grade.delete({
+                where: {
+                    uuid: gradeUuid,
+                },
+            });
+
+            return deletedGrade;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async create(value: number, coef: number, subjectUuid: string, studentUuid: string, teacherUuid: string) {
+        try {
+            const subject = await this.prisma.subject.findUnique({
+                where: {
+                    uuid: subjectUuid,
+                },
+                include: {
+                    teacher: {
+                        select: {
+                            uuid: true,
+                        },
+                    },
+                },
+            });
+
+            if (subject.teacher.uuid !== teacherUuid) throw new Error("You are not the teacher of this subject");
+
+            const grade = await this.prisma.grade.create({
+                data: {
+                    value,
+                    coef,
+                    date: new Date(),
+                    subjectUuid,
+                    studentUuid,
+                    teacherUuid,
+                },
+                select: {
+                    uuid: true,
+                    value: true,
+                    coef: true,
+                    date: true,
+                    subject: {
+                        select: {
+                            uuid: true,
+                            name: true,
+                        },
+                    },
+                    student: {
+                        select: {
+                            uuid: true,
+                            user: {
+                                select: {
+                                    name: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+
+            return grade;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

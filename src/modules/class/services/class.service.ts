@@ -57,6 +57,7 @@ export class ClassService {
                                         select: {
                                             user: {
                                                 select: {
+                                                    uuid: true,
                                                     name: true,
                                                     email: true,
                                                 },

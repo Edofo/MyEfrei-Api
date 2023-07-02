@@ -33,6 +33,12 @@ export abstract class IMutation {
     abstract register(data: RegisterInput): RegisterResponse | Promise<RegisterResponse>;
 
     abstract login(email: string, password: string): AccessToken | Promise<AccessToken>;
+
+    abstract updateGrade(grade_uuid: string, value: number): Grade | Promise<Grade>;
+
+    abstract deleteGrade(grade_uuid: string): Grade | Promise<Grade>;
+
+    abstract createGrade(student_uuid: string, subject_uuid: string, value: number, coef: number): Grade | Promise<Grade>;
 }
 
 export class ClassForStudentReponse {
@@ -64,7 +70,7 @@ export abstract class IQuery {
 
     abstract classesForTeacher(): ClassesForTeacherReponse[] | Promise<ClassesForTeacherReponse[]>;
 
-    abstract gradesForStudent(): Nullable<GradeReponse>[] | Promise<Nullable<GradeReponse>[]>;
+    abstract gradesForStudent(): Nullable<GradeResponse>[] | Promise<Nullable<GradeResponse>[]>;
 
     abstract gradesForTeacher(): Nullable<GradesForTeacher>[] | Promise<Nullable<GradesForTeacher>[]>;
 
@@ -73,7 +79,7 @@ export abstract class IQuery {
     abstract userInfos(): UserInfos | Promise<UserInfos>;
 }
 
-export class GradeReponse {
+export class GradeResponse {
     module: string;
     moyenne?: Nullable<number>;
     subjects: Nullable<SubjectResponse>[];
