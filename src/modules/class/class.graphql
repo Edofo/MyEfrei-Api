@@ -5,15 +5,24 @@ type ClassForStudentReponse {
     students: [StudentsClass!]
 }
 
+type ClassesForTeacherReponse {
+    name: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    students: [StudentsClass!]
+}
+
 type StudentsClass {
     user: UserClass!
 }
 
 type UserClass {
+    uuid: String
     name: String!
     email: String
 }
 
 type Query {
     classForStudent: ClassForStudentReponse!
+    classesForTeacher: [ClassesForTeacherReponse!]!
 }

@@ -1,0 +1,15 @@
+type SubjectsForTeacher {
+    uuid: String!
+    name: String!
+    class: SubjectClass!
+    module: SubjectClass!
+}
+
+type SubjectClass {
+    uuid: String!
+    name: String!
+}
+
+type Query {
+    subjectsForTeacher: [SubjectsForTeacher]!
+}

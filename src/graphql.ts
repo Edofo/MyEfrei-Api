@@ -42,11 +42,19 @@ export class ClassForStudentReponse {
     students?: Nullable<StudentsClass[]>;
 }
 
+export class ClassesForTeacherReponse {
+    name?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    updatedAt?: Nullable<DateTime>;
+    students?: Nullable<StudentsClass[]>;
+}
+
 export class StudentsClass {
     user: UserClass;
 }
 
 export class UserClass {
+    uuid?: Nullable<string>;
     name: string;
     email?: Nullable<string>;
 }
@@ -54,9 +62,15 @@ export class UserClass {
 export abstract class IQuery {
     abstract classForStudent(): ClassForStudentReponse | Promise<ClassForStudentReponse>;
 
+    abstract classesForTeacher(): ClassesForTeacherReponse[] | Promise<ClassesForTeacherReponse[]>;
+
     abstract gradesForStudent(): Nullable<GradeReponse>[] | Promise<Nullable<GradeReponse>[]>;
 
-    abstract userInfos(): Nullable<User> | Promise<Nullable<User>>;
+    abstract gradesForTeacher(): Nullable<GradesForTeacher>[] | Promise<Nullable<GradesForTeacher>[]>;
+
+    abstract subjectsForTeacher(): Nullable<SubjectsForTeacher>[] | Promise<Nullable<SubjectsForTeacher>[]>;
+
+    abstract userInfos(): UserInfos | Promise<UserInfos>;
 }
 
 export class GradeReponse {
@@ -70,6 +84,41 @@ export class SubjectResponse {
     moyenne?: Nullable<number>;
     teacher: string;
     grades: Nullable<Grade>[];
+}
+
+export class GradesForTeacher {
+    class: string;
+    subject: string;
+    grades: Nullable<StudentGrades>[];
+}
+
+export class StudentGrades {
+    student: GradeStudentInfos;
+    grade: Grade;
+}
+
+export class GradeStudentInfos {
+    uuid: string;
+    name: string;
+}
+
+export class SubjectsForTeacher {
+    uuid: string;
+    name: string;
+    class: SubjectClass;
+    module: SubjectClass;
+}
+
+export class SubjectClass {
+    uuid: string;
+    name: string;
+}
+
+export class UserInfos {
+    uuid?: Nullable<string>;
+    name?: Nullable<string>;
+    email?: Nullable<string>;
+    role?: Nullable<string>;
 }
 
 export class User {

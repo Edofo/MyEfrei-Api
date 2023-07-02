@@ -1,16 +1,16 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 
-import { User } from '@prisma/client';
+import { User } from "@prisma/client";
 
-import { UserService } from '../services/user.service';
-import { CurrentUser } from '@/decorators/user.decorator';
+import { UserService } from "../services/user.service";
+import { CurrentUser } from "@/decorators/user.decorator";
 
-@Resolver('User')
+@Resolver("User")
 export class UserResolver {
     constructor(private readonly userService: UserService) {}
 
-    @Query('userInfos')
+    @Query("userInfos")
     async getUserInfo(@CurrentUser() user: User) {
-        return user;
+        return await this.userService.getUserInfo(user.uuid);
     }
 }

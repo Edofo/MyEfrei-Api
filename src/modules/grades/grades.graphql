@@ -11,6 +11,23 @@ type SubjectResponse {
     grades: [Grade]!
 }
 
+type GradesForTeacher {
+    class: String!
+    subject: String!
+    grades: [StudentGrades]!
+}
+
+type StudentGrades {
+    student: GradeStudentInfos!
+    grade: Grade!
+}
+
+type GradeStudentInfos {
+    uuid: String!
+    name: String!
+}
+
 type Query {
     gradesForStudent: [GradeReponse]!
+    gradesForTeacher: [GradesForTeacher]!
 }

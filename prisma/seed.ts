@@ -28,6 +28,15 @@ const seed = async () => {
         console.log("Users seeded");
 
         await Promise.all(
+            classes.map(async class_ => {
+                await prisma.class.create({
+                    data: class_,
+                });
+            }),
+        );
+        console.log("Classes seeded");
+
+        await Promise.all(
             teachers.map(async teacher => {
                 await prisma.teacher.create({
                     data: teacher,
@@ -44,15 +53,6 @@ const seed = async () => {
             }),
         );
         console.log("Students seeded");
-
-        await Promise.all(
-            classes.map(async class_ => {
-                await prisma.class.create({
-                    data: class_,
-                });
-            }),
-        );
-        console.log("Classes seeded");
 
         await Promise.all(
             modules.map(async module => {

@@ -38,4 +38,42 @@ export class ClassService {
             throw new err();
         }
     }
+
+    async findClassesByTeacherUuid(uuid: string) {
+        try {
+            const teacher = await this.prisma.teacher.findUnique({
+                where: {
+                    uuid,
+                },
+                select: {
+                    subjects: {
+                        select: {
+                            class: {
+                                select: {
+                                    name: true,
+                                    createdAt: true,
+                                    updatedAt: true,
+                                    students: {
+                                        select: {
+                                            user: {
+                                                select: {
+                                                    name: true,
+                                                    email: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+
+            const classes = teacher?.subjects?.map(subject => subject?.class);
+            return classes;
+        } catch (err) {
+            throw new err();
+        }
+    }
 }

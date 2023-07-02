@@ -91,4 +91,57 @@ export class GradesService {
             throw error;
         }
     }
+
+    async findAllByTeacherUuid(teacherUuid: string) {
+        try {
+            const teacher = await this.prisma.teacher.findUnique({
+                where: {
+                    uuid: teacherUuid,
+                },
+                include: {
+                    subjects: {
+                        include: {
+                            grades: {
+                                include: {
+                                    student: {
+                                        select: {
+                                            user: {
+                                                select: {
+                                                    uuid: true,
+                                                    name: true,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            class: true,
+                        },
+                    },
+                },
+            });
+
+            const tab: any = [];
+
+            teacher.subjects.forEach((subject: { name: any; class: { name: any }; grades: any[] }) => {
+                tab.push({
+                    class: subject.class.name,
+                    subject: subject.name,
+                    grades: subject.grades.map(grade => {
+                        return {
+                            student: {
+                                uuid: grade.student.user.uuid,
+                                name: grade.student.user.name,
+                            },
+                            grade: grade,
+                        };
+                    }),
+                });
+            });
+
+            return tab;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

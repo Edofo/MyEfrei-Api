@@ -15,4 +15,10 @@ export class GradesResolver {
         const grades = await this.gradesService.findAllByStudentUuid(user.uuid);
         return grades || [];
     }
+
+    @Query("gradesForTeacher")
+    async findAllByTeacherUuid(@CurrentUser() user: User) {
+        const grades = await this.gradesService.findAllByTeacherUuid(user.uuid);
+        return grades || [];
+    }
 }

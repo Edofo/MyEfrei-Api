@@ -1,3 +1,10 @@
+type UserInfos {
+    uuid: String
+    name: String
+    email: String
+    role: String
+}
+
 type Query {
-    userInfos: User
+    userInfos: UserInfos!
 }

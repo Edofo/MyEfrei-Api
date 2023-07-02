@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcrypt";
 
-import { User, Student, Teacher } from '@prisma/client';
+import { User, Student, Teacher } from "@prisma/client";
 
-import { UserService } from '@/modules/user/services/user.service';
+import { UserService } from "@/modules/user/services/user.service";
 
-import { RegisterInput } from '@/graphql';
+import { RegisterInput } from "@/graphql";
 
 @Injectable()
 export class AuthService {
@@ -48,7 +48,7 @@ export class AuthService {
 
     async register(data: RegisterInput): Promise<Student | Teacher> {
         if (!data.password) {
-            throw new Error('Password is required');
+            throw new Error("Password is required");
         }
 
         const hashPassword = bcrypt.hashSync(data.password, 10);

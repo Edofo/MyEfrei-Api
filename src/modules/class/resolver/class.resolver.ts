@@ -15,4 +15,10 @@ export class ClassResolver {
         const classe = await this.classService.findClassByStudentUuid(user.uuid);
         return classe || {};
     }
+
+    @Query("classesForTeacher")
+    async findClassesByTeacher(@CurrentUser() user: User) {
+        const classes = await this.classService.findClassesByTeacherUuid(user.uuid);
+        return classes || [];
+    }
 }
