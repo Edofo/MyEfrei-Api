@@ -13,10 +13,6 @@ type ClassesForTeacherReponse {
 }
 
 type StudentsClass {
-    user: UserClass!
-}
-
-type UserClass {
     uuid: String
     name: String!
     email: String

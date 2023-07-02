@@ -56,10 +56,6 @@ export class ClassesForTeacherReponse {
 }
 
 export class StudentsClass {
-    user: UserClass;
-}
-
-export class UserClass {
     uuid?: Nullable<string>;
     name: string;
     email?: Nullable<string>;

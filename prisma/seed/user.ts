@@ -11,6 +11,12 @@ const users = [
         email: "student@a.a",
         password: "student",
     },
+    {
+        uuid: "42558ca2-9484-4f2a-8c95-f5f4e4d2a458",
+        name: "Nolan Doe",
+        email: "studen2@a.a",
+        password: "student",
+    },
 ];
 
 export default users;
