@@ -6,6 +6,7 @@ type ClassForStudentReponse {
 }
 
 type ClassesForTeacherReponse {
+    uuid: String
     name: String
     createdAt: DateTime
     updatedAt: DateTime

@@ -12,4 +12,5 @@ type SubjectClass {
 
 type Query {
     subjectsForTeacher: [SubjectsForTeacher]!
+    subjectsForClass(class_uuid: String!): [SubjectsForTeacher]!
 }

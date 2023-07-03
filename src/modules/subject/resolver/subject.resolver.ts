@@ -15,4 +15,10 @@ export class SubjectResolver {
         const subjects = await this.subjectService.findAllByTeacherUuid(user.uuid);
         return subjects || [];
     }
+
+    @Query("subjectsForClass")
+    async findAllByClassUuid(@Args("class_uuid") classUuid: string) {
+        const subjects = await this.subjectService.findAllByClassUuid(classUuid);
+        return subjects || [];
+    }
 }

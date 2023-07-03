@@ -49,6 +49,7 @@ export class ClassForStudentReponse {
 }
 
 export class ClassesForTeacherReponse {
+    uuid?: Nullable<string>;
     name?: Nullable<string>;
     createdAt?: Nullable<DateTime>;
     updatedAt?: Nullable<DateTime>;
@@ -71,6 +72,8 @@ export abstract class IQuery {
     abstract gradesForTeacher(): Nullable<GradesForTeacher>[] | Promise<Nullable<GradesForTeacher>[]>;
 
     abstract subjectsForTeacher(): Nullable<SubjectsForTeacher>[] | Promise<Nullable<SubjectsForTeacher>[]>;
+
+    abstract subjectsForClass(class_uuid: string): Nullable<SubjectsForTeacher>[] | Promise<Nullable<SubjectsForTeacher>[]>;
 
     abstract userInfos(): UserInfos | Promise<UserInfos>;
 }

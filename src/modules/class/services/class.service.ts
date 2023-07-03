@@ -33,7 +33,21 @@ export class ClassService {
                 },
             });
 
-            return student?.class;
+            const tab: any = [];
+
+            student?.class.students.forEach(student => {
+                tab.push({
+                    name: student.user.name,
+                    email: student.user.email,
+                });
+            });
+
+            return {
+                name: student?.class.name,
+                createdAt: student?.class.createdAt,
+                updatedAt: student?.class.updatedAt,
+                students: tab,
+            };
         } catch (err) {
             throw new err();
         }
@@ -50,6 +64,7 @@ export class ClassService {
                         select: {
                             class: {
                                 select: {
+                                    uuid: true,
                                     name: true,
                                     createdAt: true,
                                     updatedAt: true,
@@ -72,25 +87,17 @@ export class ClassService {
             });
 
             const tab: any = [];
-            /**
-             * [{
-             * name: "1A",
-             * createdAt: "2021-04-12T14:00:00.000Z",
-             * updatedAt: "2021-04-12T14:00:00.000Z",
-             * students: [{
-             * uuid: "41558ca2-9484-4f2a-8c95-f5f4e4d2a458",
-             * name: "Jane Doe",
-             * email: "student@a.a",
-             * }]
-             */
 
-            // push class if not already in tab (to avoid duplicate) and push student in class
             teacher?.subjects.forEach(subject => {
                 subject.class.students.forEach(student => {
-                    const index = tab.findIndex(item => item.name === subject.class.name);
+                    const classIndex = tab.findIndex(item => item.name === subject.class.name);
 
-                    if (index === -1) {
+                    const studentIndex =
+                        classIndex > -1 ? tab[classIndex].students.findIndex(s => s.uuid === student.user.uuid) : -1;
+
+                    if (classIndex === -1) {
                         tab.push({
+                            uuid: subject.class.uuid,
                             name: subject.class.name,
                             createdAt: subject.class.createdAt,
                             updatedAt: subject.class.updatedAt,
@@ -102,8 +109,8 @@ export class ClassService {
                                 },
                             ],
                         });
-                    } else {
-                        tab[index].students.push({
+                    } else if (studentIndex === -1) {
+                        tab[classIndex].students.push({
                             uuid: student.user.uuid,
                             name: student.user.name,
                             email: student.user.email,
@@ -114,7 +121,7 @@ export class ClassService {
 
             return tab;
         } catch (err) {
-            throw new err();
+            throw err;
         }
     }
 }

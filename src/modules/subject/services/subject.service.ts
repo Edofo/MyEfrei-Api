@@ -35,4 +35,34 @@ export class SubjectService {
             throw error;
         }
     }
+
+    async findAllByClassUuid(classUuid: string) {
+        try {
+            const subjects = await this.prisma.subject.findMany({
+                where: {
+                    classUuid,
+                },
+                select: {
+                    uuid: true,
+                    name: true,
+                    class: {
+                        select: {
+                            uuid: true,
+                            name: true,
+                        },
+                    },
+                    module: {
+                        select: {
+                            uuid: true,
+                            name: true,
+                        },
+                    },
+                },
+            });
+
+            return subjects;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
